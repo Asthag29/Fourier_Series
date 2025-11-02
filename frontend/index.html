@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fourier Epicycle Face Drawer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+        
+        h1 {
+            margin: 20px 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        .upload-section { text-align: center; margin-bottom: 20px; }
+        
+        .upload-btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .upload-btn:hover { transform: scale(1.05); }
+        .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        input[type="file"] { display: none; }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .control-group label {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .control-group input {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .control-group input[type="range"] { cursor: pointer; }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: 2px solid white;
+            border-radius: 25px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        
+        .btn:hover:not(:disabled) { background: white; color: #667eea; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        canvas {
+            background: #1a1a2e;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 16px;
+            min-height: 24px;
+            font-weight: 500;
+        }
+        
+        .status.processing { color: #ffd700; }
+        .status.ready { color: #90EE90; }
+        .status.error { color: #ff6b6b; }
+        
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        
+        .loader.active { display: block; }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .info {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>✨ Fourier Epicycle Face Drawer</h1>
+    
+    <div class="container">
+        <div class="upload-section">
+            <label for="imageInput" class="upload-btn" id="uploadLabel">
+                📁 Upload Face Image
+            </label>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+        
+        <div class="loader" id="loader"></div>
+        <div class="status" id="status"></div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>
+                    Number of Circles: 
+                    <span id="nCirclesValue">100</span>
+                </label>
+                <input type="range" id="nCircles" value="100" min="20" max="300" step="10">
+            </div>
+            
+            <div class="control-group">
+                <label>
+                    Animation Speed: 
+                    <span id="speedValue">1.0x</span>
+                </label>
+                <input type="range" id="speed" value="1" min="0.1" max="3" step="0.1">
+            </div>
+            
+            <div class="control-group">
+                <label>
+                    Edge Threshold: 
+                    <span id="thresholdValue">100</span>
+                </label>
+                <input type="range" id="threshold" value="100" min="50" max="200" step="10">
+            </div>
+            
+            <div class="control-group">
+                <label>
+                    Show Circles: 
+                    <input type="checkbox" id="showCircles" checked>
+                </label>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn" id="processBtn" disabled>🔄 Process Image</button>
+            <button class="btn" id="startBtn" disabled>▶️ Start</button>
+            <button class="btn" id="pauseBtn" disabled>⏸️ Pause</button>
+            <button class="btn" id="resetBtn" disabled>🔁 Reset</button>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="canvas" width="800" height="800"></canvas>
+        </div>
+        
+        <div class="info">
+            <p><strong>How it works:</strong> Upload a face image → Python processes edges and computes Fourier coefficients → JavaScript animates epicycles in real-time</p>
+            <p>💡 Tip: Use high-contrast images for best results. More circles = more detail but slower animation.</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

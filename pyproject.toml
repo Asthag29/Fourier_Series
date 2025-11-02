@@ -1,0 +1,23 @@
+[project]
+name = "image_generation_using_fourier"
+version = "0.1.0"
+description = "A Python package for generating images using Fourier series."
+readme = "README.md"
+requires-python = ">=3.11.11"
+dependencies = [
+    "fastapi>=0.120.4",
+    "image>=1.5.33",
+    "manim>=0.19.0",
+    "matplotlib>=3.10.5",
+    "numpy>=2.3.2",
+    "opencv-python>=4.11.0.86",
+    "python-multipart>=0.0.20",
+    "scipy>=1.16.1",
+    "unicorn>=2.1.4",
+    "uvicorn>=0.38.0",
+]
+
+[tool.uv.workspace]
+members = [
+    "manimations",
+]
