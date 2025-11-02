@@ -28,7 +28,6 @@ async def health():
 async def process_image(
     file: UploadFile = File(...),
     n_circles: int = Form(100),
-    edge_threshold: int = Form(100)
 ):
     temp_path = f"temp_{file.filename}"
     try:
@@ -37,14 +36,17 @@ async def process_image(
         result = pipeline(
             image_path=temp_path,
             n_circles=n_circles,
-            edge_threshold=edge_threshold
         )
         os.remove(temp_path)
+        print(f"Received file: {file.filename}, size: {len(await file.read())} bytes")
+        await file.seek(0) 
         return {
             "frequencies": result["frequencies"].tolist(),
             "amplitudes": result["magnitude"].tolist(),
             "phases": result["phases"].tolist(),
         }
+   
+
     except Exception as e:
         if os.path.exists(temp_path):
             os.remove(temp_path)
@@ -52,6 +54,7 @@ async def process_image(
             status_code=500,
             content={"error": f"Processing failed: {str(e)}"}
         )
+  
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("src.app:app", host="0.0.0.0", port=8000, reload=True)
