@@ -11,6 +11,8 @@ def extract_edges(image_path, min_threshold=100, max_threshold=200, n_samples=10
         edges: Binary edge map
     """
     gray = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    if gray is None:
+        raise ValueError(f"Image at path {image_path} could not be loaded.")
     edges = cv2.Canny(gray, min_threshold, max_threshold)
 
     y_coords, x_coords = np.where(edges > 0)
@@ -43,8 +45,8 @@ def extract_edges(image_path, min_threshold=100, max_threshold=200, n_samples=10
         visited.add(next_idx)
         current = next_idx
 
-    ordered_points = ordered_points - np.mean(ordered_points, axis=0)
-    ordered_points = ordered_points / np.max(np.linalg.norm(ordered_points, axis=1))
+    # ordered_points = ordered_points - np.mean(ordered_points, axis=0)
+    # ordered_points = ordered_points / np.max(np.linalg.norm(ordered_points, axis=1))
 
     return np.array(ordered_points)
 

@@ -1,35 +1,66 @@
-import AnimationController from './animation-controller.js';
+import AnimationController from './animation_controller.js';
 
-const controller = new AnimationController('epicycleCanvas');
-controller.start();
+// Function to get Fourier data from backend
+async function getFourierDataFromBackend(file, n_circles = 100) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('n_circles', n_circles);
 
-// Update UI
-document.getElementById('circleCount').textContent = 
-    controller.epicycleSystem.circles.length;
+    const response = await fetch('http://localhost:8000/api/fourier-data', {
+        method: 'POST',
+        body: formData
+    });
+    const result = await response.json();
+    if (result.success) {
+        return result.circles;
+    } else {
+        throw new Error(result.error);
+    }
+}
+
+let animationController = null;
+
+// Process button handler
+document.getElementById('processBtn').addEventListener('click', async () => {
+    const fileInput = document.getElementById('fileInput');
+    const selectedFile = fileInput.files[0];
+    
+    if (!selectedFile) {
+        alert('Please select an image file first!');
+        return;
+    }
+    
+    try {
+        const circlesData = await getFourierDataFromBackend(selectedFile, 100);
+        animationController = new AnimationController('epicycleCanvas', circlesData);
+        animationController.start();
+        
+        // Update UI
+        document.getElementById('circleCount').textContent = 
+            animationController.epicycleSystem.circles.length;
+    } catch (error) {
+        console.error('Error processing image:', error);
+        alert('Error processing image: ' + error.message);
+    }
+});
 
 // Controls
 document.getElementById('pauseBtn').addEventListener('click', () => {
-    controller.pause();
-    document.getElementById('pauseBtn').textContent = 
-        controller.isRunning ? 'Pause' : 'Resume';
+    if (animationController) {
+        animationController.pause();
+        document.getElementById('pauseBtn').textContent = 
+            animationController.isRunning ? 'Pause' : 'Resume';
+    }
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
-    controller.reset();
+    if (animationController) {
+        animationController.reset();
+    }
 });
 
 document.getElementById('clearPathBtn').addEventListener('click', () => {
-    controller.clearPath();
-});
-
-// Optional: Load data from Python backend
-document.getElementById('loadDataBtn').addEventListener('click', async () => {
-    try {
-        const response = await fetch('/api/fourier-data');
-        const data = await response.json();
-        // Reload with new data
-        location.reload();
-    } catch (error) {
-        console.error('Failed to load data:', error);
+    if (animationController) {
+        animationController.clearPath();
     }
 });

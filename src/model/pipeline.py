@@ -4,7 +4,7 @@ from .fourier import fourier_approximate
 import sys
 import os
 
-def pipeline(image_path, min_threshold=100, max_threshold=200, n_circles=10):
+def pipeline(image_path, min_threshold=100, max_threshold=200, n_circles=100):
 
 
         edges = extract_edges(image_path, min_threshold, max_threshold,n_samples=2000, ord=2)
@@ -16,6 +16,7 @@ def pipeline(image_path, min_threshold=100, max_threshold=200, n_circles=10):
             "magnitude": magnitude,
             "phases": phases
         }
+
 
 if __name__ == "__main__":
     

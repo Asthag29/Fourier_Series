@@ -2,9 +2,7 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import os
-import uvicorn
-
-from .model.pipeline import pipeline
+from src.model.pipeline import pipeline
 
 app = FastAPI(title="Fourier Epicycle API")
 
@@ -20,41 +18,30 @@ app.add_middleware(
 async def root():
     return {"message": "Fourier Epicycle API"}
 
-@app.get("/health")
-async def health():
-    return {"status": "healthy"}
-
-@app.post("/process-image/")
-async def process_image(
+@app.post("/api/fourier-data")
+async def get_fourier_data(
     file: UploadFile = File(...),
-    n_circles: int = Form(100),
+    n_circles: int = Form(100)
 ):
     temp_path = f"temp_{file.filename}"
     try:
         with open(temp_path, "wb") as f:
             f.write(await file.read())
-        result = pipeline(
-            image_path=temp_path,
-            n_circles=n_circles,
-        )
+        result = pipeline(image_path=temp_path, n_circles=n_circles)
         os.remove(temp_path)
-        print(f"Received file: {file.filename}, size: {len(await file.read())} bytes")
-        await file.seek(0) 
-        return {
-            "frequencies": result["frequencies"].tolist(),
-            "amplitudes": result["magnitude"].tolist(),
-            "phases": result["phases"].tolist(),
-        }
-   
-
+        circles = [
+            [
+                float(result['magnitude'][i]),
+                float(result['frequencies'][i]),
+                float(result['phases'][i])
+            ]
+            for i in range(len(result['frequencies']))
+        ]
+        return {"circles": circles, "success": True}
     except Exception as e:
         if os.path.exists(temp_path):
             os.remove(temp_path)
         return JSONResponse(
             status_code=500,
-            content={"error": f"Processing failed: {str(e)}"}
+            content={"error": str(e), "success": False}
         )
-  
-
-if __name__ == "__main__":
-    uvicorn.run("src.app:app", host="0.0.0.0", port=8000, reload=True)
