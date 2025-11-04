@@ -4,76 +4,91 @@ export default class EpicycleSystem {
     constructor(data) {
         this.circles = [];
         this.path = [];
-        this.maxPathLength = 500;
         this.createCircles(data);
     }
-    
+
     createCircles(data) {
         let parent = null;
         for (let i = 0; i < data.length; i++) {
-            const [radius, frequency, phase] = data[i];
-            const circle = new Circle(radius, frequency, phase, parent);
+            const [amplitude, frequency, phase] = data[i];
+            const circle = new Circle(amplitude, frequency, phase, parent);
             this.circles.push(circle);
             parent = circle;
         }
     }
-    
-    // Legacy update method using deltaT
-    update(deltaT) {
-        for (let circle of this.circles) {
-            circle.update(deltaT);
-        }
-        this.addPathPoint();
-    }
-    
-    // NEW: Update using normalized time t ∈ [0, 1]
+
     updateWithNormalizedTime(t) {
-        for (let circle of this.circles) {
-            circle.setRotationFromTime(t);
+        // ✅ First circle center ALWAYS at origin
+        this.circles[0].x = 0;
+        this.circles[0].y = 0;
+        this.circles[0].setRotationFromTime(t);
+
+        // ✅ Each subsequent circle's center moves to parent's endpoint
+        for (let i = 1; i < this.circles.length; i++) {
+            const prevCircle = this.circles[i - 1];
+            this.circles[i].x = prevCircle.endX;  // Position at parent's endpoint
+            this.circles[i].y = prevCircle.endY;
+            this.circles[i].setRotationFromTime(t);
         }
+
         this.addPathPoint();
     }
-    
+
     addPathPoint() {
         const lastCircle = this.circles[this.circles.length - 1];
-        this.path.push({ x: lastCircle.endX, y: lastCircle.endY });
-        if (this.path.length > this.maxPathLength) {
-            this.path.shift();
-        }
+        this.path.push({
+            x: lastCircle.endX,
+            y: lastCircle.endY
+        });
     }
-    
+
     reset() {
+        this.path = [];
         for (let circle of this.circles) {
             circle.reset();
         }
-        this.path = [];
+        this.circles[0].x = 0;
+        this.circles[0].y = 0;
     }
-    
+
     clearPath() {
         this.path = [];
     }
-    
+
     render(context, xOffset, yOffset, scale) {
         // Draw all circles
         for (let circle of this.circles) {
             circle.render(context, xOffset, yOffset, scale);
         }
+
         // Draw the path
         if (this.path.length > 1) {
             context.strokeStyle = '#00ff88';
             context.lineWidth = 2;
             context.beginPath();
-            context.moveTo(this.path[0].x + xOffset * scale, this.path[0].y + yOffset * scale);
+            context.moveTo(
+                this.path[0].x * scale + xOffset,
+                this.path[0].y * scale + yOffset
+            );
+
             for (let i = 1; i < this.path.length; i++) {
-                context.lineTo(this.path[i].x + xOffset * scale, this.path[i].y + yOffset * scale);
+                context.lineTo(
+                    this.path[i].x * scale + xOffset,
+                    this.path[i].y * scale + yOffset
+                );
             }
             context.stroke();
         }
+
         // Draw tip point
         const lastCircle = this.circles[this.circles.length - 1];
         context.fillStyle = '#ff0088';
         context.beginPath();
-        context.arc(lastCircle.endX + xOffset * scale, lastCircle.endY + yOffset * scale, 4, 0, 2 * Math.PI);
+        context.arc(
+            lastCircle.endX * scale + xOffset,
+            lastCircle.endY * scale + yOffset,
+            4, 0, 2 * Math.PI
+        );
         context.fill();
     }
 }

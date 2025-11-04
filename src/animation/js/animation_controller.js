@@ -8,14 +8,20 @@ export default class AnimationController {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
-        // ADD: Auto-calculate scale based on data
-        const maxRadius = Math.max(...epicycleData.map(c => Math.abs(c[0])));
-         
-        console.log('Max circle radius:', maxRadius);
-    
-    // If circles are too small, scale them up
-    // If circles are too large, scale them down
-        this.scale = 0.1;
+
+
+        // Calculate total extent of all circles
+        let totalRadius = 0;
+        for (let [amplitude] of epicycleData) {
+            totalRadius += Math.abs(amplitude);
+        }
+        
+        console.log('Total radius extent:', totalRadius);
+        
+        // Scale to fit within 60% of canvas size
+        const targetSize = Math.min(this.width, this.height) * 1;
+        this.scale = totalRadius > 0 ? targetSize / totalRadius : 1;
+        
         console.log('Using scale:', this.scale);
     
 
@@ -68,7 +74,7 @@ export default class AnimationController {
     render() {
         this.context.fillStyle = '#000';
         this.context.fillRect(0, 0, this.width, this.height);
-        this.epicycleSystem.render(this.context, this.xOffset, this.yOffset);
+        this.epicycleSystem.render(this.context, this.xOffset, this.yOffset, this.scale);
         
         // Optional: Display current time for debugging
         this.context.fillStyle = '#fff';
