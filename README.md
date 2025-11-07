@@ -2,7 +2,7 @@
 
 ![shinchan demo](Shinchan_fourier.gif)
 
-I have been pretty obsessed with Fourier transformations lately, and I have always wanted to create one of those cool websites where you can literally draw anything with epicyles. The only thing I felt was missing is that I had to either draw manually or use an SVG file format, neither of which could draw me a shinchan.
+I have been pretty obsessed with Fourier transformations lately and have always enjoyed playing around with those cool websites where you can literally draw anything with epicycles. The only thing,I felt was missing was that I had to either draw things manually or use an SVG file format, neither of which was giving me good enough results.
 
 So, I tried creating my own epicycles directly from an image (why not, I am cool, right?). Even though this is quite different from what I initially imagined ,which was to draw human sketches(soon realised why it was a bad idea 🙂) ,it actually works on cartoons to some extent. I made the mistake of trying it on myself, and it made me look like some bald old creature ,which I am definitely not! But this is still an ongoing project, and I haven’t given up yet.
 
