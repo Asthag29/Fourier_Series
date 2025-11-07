@@ -18,12 +18,12 @@ export default class EpicycleSystem {
     }
 
     updateWithNormalizedTime(t) {
-        // ✅ First circle center ALWAYS at origin
+        // First circle center ALWAYS at origin
         this.circles[0].x = 0;
         this.circles[0].y = 0;
         this.circles[0].setRotationFromTime(t);
 
-        // ✅ Each subsequent circle's center moves to parent's endpoint
+        // Each subsequent circle's center moves to parent's endpoint
         for (let i = 1; i < this.circles.length; i++) {
             const prevCircle = this.circles[i - 1];
             this.circles[i].x = prevCircle.endX;  // Position at parent's endpoint

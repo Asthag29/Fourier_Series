@@ -21,8 +21,12 @@ async def root():
 @app.post("/api/fourier-data")
 async def get_fourier_data(
     file: UploadFile = File(...),
-    n_circles: int = Form(100)
+    n_circles: int = Form(...)
 ):
+    print(f"=== API CALL ===")
+    print(f"Received n_circles: {n_circles}")
+    print(f"Received file: {file.filename}")
+    
     temp_path = f"temp_{file.filename}"
     try:
         with open(temp_path, "wb") as f:
@@ -37,12 +41,7 @@ async def get_fourier_data(
             ]
             for i in range(len(result['frequencies']))
         ]
-        # print(f"\n=== FOURIER DATA ===")
-        # print(f"Total circles: {len(circles)}")
-        # print(f"First 5 circles: {circles[:5]}")
-        # print(f"Magnitude range: {min(c[0] for c in circles)} to {max(c[0] for c in circles)}")
-        # print(f"Frequency range: {min(c[1] for c in circles)} to {max(c[1] for c in circles)}")
-        # print(f"Phase range: {min(c[2] for c in circles)} to {max(c[2] for c in circles)}")
+       
         return {"circles": circles, "success": True}
     except Exception as e:
         if os.path.exists(temp_path):

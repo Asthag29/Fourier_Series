@@ -1,6 +1,6 @@
 import numpy as np
 
-def fourier_approximate(smooth_curve, n_frequencies=1000):
+def fourier_approximate(smooth_curve, n_frequencies=None):
     """
     Function 4: Approximate smooth curve using Fourier series
     
@@ -16,9 +16,14 @@ def fourier_approximate(smooth_curve, n_frequencies=1000):
     # Compute FFT and frequencies
     coefficients = np.fft.fft(z , norm='forward')
     frequencies = np.fft.fftfreq(N, 1/N)  # integer frequencies
-    
+       
     # Keep n largest components
+    mask= frequencies!=0
+    frequencies = frequencies[mask]
+    coefficients = coefficients[mask]
     indices = np.argsort(-np.abs(coefficients))[:n_frequencies]
+
+    
     frequencies = frequencies[indices]
     coefficients = coefficients[indices]
     

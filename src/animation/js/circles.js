@@ -15,6 +15,7 @@ export default class Circle {
 
     setRotationFromTime(t) {
         this.rotation = this.phase + 2 * Math.PI * this.frequency * t;
+        console.log(`Circle freq: ${this.frequency}, time: ${t.toFixed(3)}, rotation: ${this.rotation.toFixed(3)}`);
     }
 
     get endX() {

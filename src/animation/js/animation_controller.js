@@ -35,10 +35,6 @@ export default class AnimationController {
         this.currentStep = 0;            // Current step [0, totalSteps)
         this.stepsPerFrame = 1;          // How many steps to advance per frame (speed control)
         
-        // Alternative: You can also use continuous time
-        // this.time = 0;
-        // this.speed = 0.002;  // Speed of traversal through [0, 1]
-        
         this.xOffset = this.width /2;
         this.yOffset = this.height /2 ;
     }

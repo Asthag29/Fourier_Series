@@ -3,7 +3,7 @@ from scipy.ndimage import gaussian_filter1d
 import numpy as np
 
 
-def create_smooth_spline(ordered_points,  smoothing_factor=0.4):
+def create_smooth_spline(ordered_points,  smoothing_factor=None):
     """
     Function 3: Create smooth spline curve from ordered points
     

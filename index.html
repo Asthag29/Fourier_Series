@@ -1,38 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fourier Epicycles</title>
-    <link rel="stylesheet" href="src/animation/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fourier Epicycles</title>
+<link rel="stylesheet" href="src/animation/css/style.css">
 </head>
 <body>
-    <div class="container">
+<div class="container">
+<h1>Fourier Epicycles Drawer</h1>
+<canvas id="epicycleCanvas" width="1200" height="600"></canvas>
+<div class="controls">
 
-        <h1>Fourier Epicycles Drawer</h1>
-        <canvas id="epicycleCanvas" width="1200" height="600"></canvas>
-        
+    <input type="file" id="fileInput" class="btn-input" accept="image/*" required>
 
-        <div class="controls">
+    <input type="number" id="nCirclesInput" class="btn-input" min="1" max="500" placeholder="Number of circles" required>
 
-            <button><input type="file" id="fileInput" accept="image/*"></button>
-            <button id="processBtn">Process Image</button>
-            <button id="pauseBtn">Pause</button>
-            <button id="resetBtn">Reset</button>
-            <button id="clearPathBtn">Clear Path</button>
-            <button id="loadDataBtn">Load New Data</button>
-      
+    <button id="processBtn" class="btn-input">Start Animation</button>
+    <button id="pauseBtn" class="btn-input">Pause</button>
+    <button id="resetBtn" class="btn-input">Reset</button>
+    <button id="clearPathBtn" class="btn-input">Clear Path</button>
 
-        </div>
-
-        <div class="info">
-                <p>Data from: <span id="dataSource">epicycle-data.js</span></p>
-                <p>Circles: <span id="circleCount">0</span></p>
-        </div>
-        
-    </div>
-
-    
-    <script type="module" src="src/animation/js/main.js"></script>
+</div>
+<div class="info">
+    <p>Status: <span id="statusText">Please select an image and number of circles</span></p>
+    <p>Circles: <span id="circleCount">0</span></p>
+</div>
+</div>
+<script type="module" src="src/animation/js/main.js"></script>
 </body>
 </html>

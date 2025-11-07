@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-def extract_edges(image_path, min_threshold=100, max_threshold=200, n_samples=1000, ord=2):
+def extract_edges(image_path, min_threshold=None, max_threshold=None, n_samples=None, ord=2):
     """
     Function 1: Load image and extract edges using OpenCV Canny
     
@@ -46,8 +46,6 @@ def extract_edges(image_path, min_threshold=100, max_threshold=200, n_samples=10
         current = next_idx
 
     ordered_points = np.array(ordered_points)
-    # ordered_points = ordered_points - np.mean(ordered_points, axis=0)
-    # ordered_points = ordered_points / np.max(np.linalg.norm(ordered_points, axis=1))
 
     return ordered_points
 
