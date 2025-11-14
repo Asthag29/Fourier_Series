@@ -32,7 +32,7 @@ uv venv
 *Install project dependencies.*
 
 ```bash
-pip install .
+uv pip install .
 ```
 
 *Start the FastAPI backend server.*
