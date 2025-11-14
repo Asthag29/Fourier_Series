@@ -26,7 +26,7 @@ cd Fourier_Transformation
 *Create a virtual environment.*
 
 ```bash
-python3 -m venv .venv
+uv venv
 ```
 
 *Install project dependencies.*
