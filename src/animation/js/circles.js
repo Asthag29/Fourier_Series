@@ -27,7 +27,7 @@ export default class Circle {
     }
 
     render(context, xOffset, yOffset, scale) {
-        context.strokeStyle = 'rgba(100, 150, 255, 0.4)';
+        context.strokeStyle = 'rgba(100, 128, 255, 0.9)';
         context.lineWidth = 1;
 
         // Draw circle centered at (x, y)
@@ -41,7 +41,7 @@ export default class Circle {
         context.stroke();
 
         // Draw radius line from center to endpoint
-        context.strokeStyle = 'rgba(255, 100, 100, 0.6)';
+        context.strokeStyle = 'rgba(251, 251, 251, 1)';
         context.lineWidth = 2;
         context.beginPath();
         context.moveTo(
