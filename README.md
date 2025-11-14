@@ -19,8 +19,8 @@ I have been doing some research and found algorithms that can draw complete imag
 *Clone the repository to your machine.*
 
 ```bash
-git clone https://github.com/your-username/fourier_series.git
-cd fourier_series
+git clone https://github.com/Asthag29/Fourier_Transformation.git
+cd Fourier_Transformation
 ```
 
 *Create a virtual environment.*
